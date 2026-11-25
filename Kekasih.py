@@ -57,7 +57,7 @@ YELLOW = "\033[93m"
 
 
 def warna(teks, kode):
-    return f"{kode}{teks}{RESET}"
+    return f"{kode}{teks}{RESET}" #agar warna normal
 
 
 def bersihkan():
@@ -68,7 +68,7 @@ def bersihkan():
 
 
 def jeda():
-    input(warna("\nTekan Enter untuk kembali...", DIM))
+    input(warna("\nTekan Enter untuk kembali...", DIM)) #redup
 
 
 def banner(teks, subteks=""):
@@ -118,7 +118,6 @@ def warna_jenis(jenis):
 
 
 def masukan(teks, strip=True):
-    """input() biasa. Mengetik 'batal' mengembalikan None (= batal)."""
     nilai = input(teks)
     if nilai.strip().lower() == "batal":
         return None
@@ -133,8 +132,6 @@ def konfirmasi(teks):
 
 
 def pilih_index(teks, pilihan, batal="Kembali"):
-    """Tampilkan pilihan bernomor + 0 untuk kembali.
-    Mengembalikan index pilihan, atau None jika batal."""
     print(teks)
     baris = []
     for no in range(len(pilihan)):
@@ -151,7 +148,6 @@ def pilih_index(teks, pilihan, batal="Kembali"):
 
 
 def pilih(teks, pilihan, batal="Kembali"):
-    """Sama seperti pilih_index, tetapi mengembalikan ISI pilihan (None jika batal)."""
     index = pilih_index(teks, pilihan, batal)
     if index is None:
         return None
@@ -159,7 +155,6 @@ def pilih(teks, pilihan, batal="Kembali"):
 
 
 def tanggal_valid(tanggal):
-    """True jika tanggal berformat DD-MM-YYYY dan benar-benar ada di kalender."""
     bagian = tanggal.split("-")
     if len(bagian) != 3:
         return False
@@ -200,7 +195,6 @@ def input_tanggal(teks="Tanggal (DD-MM-YYYY, kosongkan = hari ini): "):
 
 
 def adalah_angka(teks):
-    """True jika teks bisa diubah menjadi angka desimal (boleh diawali + atau -)."""
     if teks == "":
         return False
     angka = teks
@@ -224,7 +218,6 @@ def input_jumlah(teks="Jumlah uang: ", boleh_nol=False):
 
 
 def cek_password(password):
-    """Return (valid, pesan). Wajib: min. 6 karakter, ada huruf besar dan angka."""
     ada_besar = False
     ada_angka = False
     for huruf in password:
@@ -243,8 +236,6 @@ def cek_password(password):
 
 
 def input_password(teks="Password baru: ", boleh_kosong=False):
-    """Minta password sampai valid.
-    Return None jika batal, atau "" jika boleh_kosong dan dikosongkan."""
     pesan = f"Min. {MIN_PASSWORD} karakter, kombinasi huruf besar & angka"
     if boleh_kosong:
         pesan += " (kosongkan = tidak diubah)"
@@ -262,7 +253,6 @@ def input_password(teks="Password baru: ", boleh_kosong=False):
 
 
 def baca(file):
-    """Membaca file CSV menjadi list of dictionary. File belum ada -> list kosong."""
     if not os.path.exists(file):
         return []
     with open(file, newline="") as f:
@@ -270,7 +260,6 @@ def baca(file):
 
 
 def simpan(file, kolom, data):
-    """Menulis ulang seluruh isi file CSV dari list of dictionary."""
     with open(file, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=kolom)
         writer.writeheader()
@@ -278,7 +267,6 @@ def simpan(file, kolom, data):
 
 
 def pindah_data_pemilik(lama, baru):
-    """Dipakai saat username berubah: dompet, transaksi, kategori, sumber ikut pindah."""
     for item in FILE_DATA_PEMILIK:
         file = item[0]
         kolom = item[1]
@@ -304,7 +292,6 @@ def username_ada(users, username):
 
 
 def cari_nama(daftar, nama):
-    """Cari nama di list tanpa membedakan huruf besar/kecil. None jika tidak ada."""
     for d in daftar:
         if d.lower() == nama.lower():
             return d
@@ -312,7 +299,6 @@ def cari_nama(daftar, nama):
 
 
 def setup_awal():
-    """Jika belum ada akun orang tua (admin), buat akun pertama (ayah/ibu)."""
     users = baca(FILE_USER)
     if ada_admin(users):
         return
@@ -345,7 +331,6 @@ def setup_awal():
 
 
 def tambah_anggota(admin):
-    """Orang tua membuat akun anggota keluarga (anak atau orang tua lain)."""
     judul("TAMBAH ANGGOTA KELUARGA")
     users = baca(FILE_USER)
     jenis = pilih("Jenis akun:", ["Anak", "Orang tua (admin)"])
@@ -377,7 +362,6 @@ def tambah_anggota(admin):
 
 
 def login():
-    """Return dictionary user jika berhasil, None jika 3x gagal, "batal" jika dibatalkan."""
     judul("LOGIN")
     users = baca(FILE_USER)
 
@@ -400,7 +384,6 @@ def login():
 
 
 def ubah_username(user):
-    """User/admin mengubah username miliknya sendiri."""
     judul("UBAH USERNAME")
     lama = user["username"]
     print(f"Username saat ini: {warna(lama, BOLD)}")
@@ -430,7 +413,6 @@ def ubah_username(user):
 
 
 def ubah_password(user):
-    """User/admin mengubah password miliknya sendiri (wajib konfirmasi password lama)."""
     judul("UBAH PASSWORD")
     lama = masukan("Password saat ini: ", strip=False)
     if lama is None:
@@ -471,7 +453,6 @@ def dompet_milik(user):
 
 
 def hitung_saldo(dompet, transaksi):
-    """Saldo sekarang = saldo awal + pemasukan - pengeluaran."""
     saldo = float(dompet["saldo_awal"])
     for t in transaksi:
         if t["pemilik"] == dompet["pemilik"] and t["dompet"] == dompet["dompet"]:
@@ -484,7 +465,6 @@ def hitung_saldo(dompet, transaksi):
 
 
 def ada_minus(transaksi, dompets):
-    """True jika ada dompet yang saldonya jadi minus."""
     for d in dompets:
         if round(hitung_saldo(d, transaksi), 2) < 0:
             return True
@@ -492,7 +472,6 @@ def ada_minus(transaksi, dompets):
 
 
 def saldo_dompet(user, nama):
-    """Saldo sekarang untuk satu dompet milik user (None jika dompet tidak ditemukan)."""
     transaksi = baca(FILE_TRANSAKSI)
     for d in dompet_saya(user):
         if d["dompet"] == nama:
@@ -627,7 +606,6 @@ def hapus_dompet(user):
 
 
 def ambil_daftar(user, file, kolom, field, default):
-    """Daftar pilihan milik user. User baru otomatis dapat daftar default."""
     data = baca(file)
     milik = []
     for r in data:
@@ -651,9 +629,6 @@ def sumber_milik(user):
 
 
 def pilih_kategori(user, jenis, dompet=None):
-    """Pilih kategori pengeluaran / sumber pemasukan, atau tambah yang baru dari sini.
-    Jika dompet diberikan, sisa saldo dompet itu ditampilkan dulu.
-    Mengembalikan nama pilihan, atau None jika batal."""
     if jenis == "Pemasukan":
         file = FILE_SUMBER
         kolom = KOLOM_SUMBER
@@ -700,7 +675,6 @@ def pilih_kategori(user, jenis, dompet=None):
 
 
 def transaksi_saya(user):
-    """Daftar [index asli, transaksi] milik user."""
     semua = baca(FILE_TRANSAKSI)
     hasil = []
     for i in range(len(semua)):
@@ -726,8 +700,6 @@ def cetak(daftar):
 
 
 def cetak_dengan_saldo(user, daftar):
-    """Seperti cetak(), tetapi ada kolom sisa saldo dompet setelah tiap transaksi
-    (dihitung berurutan sesuai urutan data) dan total sisa saldo di bawah tabel."""
     if len(daftar) == 0:
         info("Data tidak ditemukan.")
         return
@@ -760,8 +732,6 @@ def cetak_dengan_saldo(user, daftar):
 
 
 def pilih_nomor(daftar, aksi):
-    """Pilih nomor data dari tabel. 0 = kembali (None).
-    Mengembalikan index ASLI di file."""
     while True:
         nomor = masukan(f"Nomor data yang ingin {aksi} (0 = kembali): ")
         if nomor is None or nomor == "0":
@@ -772,8 +742,6 @@ def pilih_nomor(daftar, aksi):
 
 
 def pilih_jenis(user, transaksi):
-    """Pilih jenis; kategori/sumber ikut menyesuaikan. Dipakai tambah & ubah transaksi.
-    Return True jika selesai, False jika dibatalkan."""
     jenis_lama = transaksi.get("jenis")
     jenis = pilih("\nJenis transaksi:", ["Pemasukan", "Pengeluaran"])
     if jenis is None:
@@ -945,7 +913,6 @@ def hapus_data(user):
 
 
 def hitung_ringkasan(dompets, data):
-    """Return (saldo awal, pemasukan, pengeluaran, saldo sekarang)."""
     awal = 0.0
     for d in dompets:
         awal += float(d["saldo_awal"])
@@ -962,8 +929,6 @@ def hitung_ringkasan(dompets, data):
 
 
 def urutkan_dari_terbesar(kamus):
-    """Ubah dictionary {nama: jumlah} menjadi list [nama, jumlah]
-    yang diurutkan dari jumlah terbesar (bubble sort)."""
     hasil = []
     for nama in kamus:
         hasil.append([nama, kamus[nama]])
@@ -978,7 +943,6 @@ def urutkan_dari_terbesar(kamus):
 
 
 def cetak_status_pengeluaran(users, dompets, data):
-    """Indikator hemat / normal / boros berdasarkan persen uang yang sudah terpakai."""
     print("\nStatus pengeluaran anak:")
     baris = []
     for u in users:
@@ -1018,8 +982,6 @@ def cetak_status_pengeluaran(users, dompets, data):
 
 
 def cetak_laporan(dompets, data):
-    """Tabel ringkasan + pemasukan per sumber + pengeluaran per kategori.
-    Dipakai laporan user & admin."""
     awal, pemasukan, pengeluaran, saldo = hitung_ringkasan(dompets, data)
 
     tabel([["Total Saldo Awal", rupiah(awal)],
@@ -1070,7 +1032,6 @@ def laporan(user):
 
 
 def daftar_user(users):
-    """Hanya akun anak (role 'user')."""
     anak = []
     for u in users:
         if u["role"] == "user":
@@ -1079,7 +1040,6 @@ def daftar_user(users):
 
 
 def pilih_user(daftar, aksi):
-    """Pilih anak dari tabel. None jika batal."""
     nama_anak = []
     for u in daftar:
         nama_anak.append(u["username"])
@@ -1120,7 +1080,6 @@ def statistik_user(user):
 
 
 def lihat_semua_akun(admin):
-    """Admin melihat username dan password semua akun (anak dan orang tua)."""
     judul("DAFTAR SEMUA USERNAME & PASSWORD")
     users = baca(FILE_USER)
     if len(users) == 0:
@@ -1138,7 +1097,6 @@ def lihat_semua_akun(admin):
 
 
 def ubah_user(user):
-    """Admin mengubah username dan/atau password anak."""
     judul("UBAH DATA ANAK")
     users = baca(FILE_USER)
     daftar = daftar_user(users)
@@ -1210,7 +1168,6 @@ def hapus_user(user):
 
 
 def laporan_keseluruhan(admin):
-    """Laporan gabungan semua anak + ringkasan per anak + status pengeluaran."""
     judul("LAPORAN KESELURUHAN ANAK")
     users = daftar_user(baca(FILE_USER))
     if len(users) == 0:
@@ -1255,7 +1212,6 @@ def laporan_keseluruhan(admin):
 
 
 def tampil_menu(jejak, user, daftar_menu, tombol_keluar="Kembali"):
-    """Cetak banner + tabel menu, lalu kembalikan pilihan user (teks)."""
     bersihkan()
     banner(jejak.upper(), f"Masuk sebagai: {user['username']} ({ROLE_LABEL.get(user['role'], user['role'])})")
     print()
@@ -1268,7 +1224,6 @@ def tampil_menu(jejak, user, daftar_menu, tombol_keluar="Kembali"):
 
 
 def selesai_fitur(hasil):
-    """Tunggu Enter setelah fitur selesai, kecuali fitur dibatalkan."""
     if hasil != "batal":
         jeda()
 
@@ -1374,7 +1329,6 @@ def menu_anggota(user, jejak):
 
 
 def menu_anak(user):
-    """Menu utama untuk anak (role 'user')."""
     jejak = "Menu Utama"
     while True:
         pilihan = tampil_menu(jejak, user,
@@ -1398,7 +1352,6 @@ def menu_anak(user):
 
 
 def menu_admin(user):
-    """Menu utama untuk orang tua (role 'admin')."""
     jejak = "Menu Utama"
     while True:
         pilihan = tampil_menu(jejak, user,
